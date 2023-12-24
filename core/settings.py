@@ -12,21 +12,27 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import dj_database_url
 import environ
 from pathlib import Path
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-env = environ.Env(DEBUG=(bool,False))
+# Build paths inside the project like this: BASE_DIR / 'subdir'
+import os
+from pathlib import Path
+from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Specify the path to the .env file
+dotenv_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env')
 
+# Load environment variables from the .env file
+load_dotenv(dotenv_path)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG")
+DEBUG = os.getenv("DEBUG")
 
-ALLOWED_HOSTS = env("ALLOWED_HOSTS")
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '127.0.0.1:8000', '*']
 
 
 # Application definition
@@ -55,7 +61,8 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-'http://localhost:5173'
+'http://localhost:5173',
+'https://example.com'
 ]
 
 
@@ -87,13 +94,13 @@ DATABASES = {
     'default': {
         #'ENGINE': 'django.db.backends.sqlite3',
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DATABASE_NAME'),
-        'USER': env('DATABASE_USER'),
-        'PASSWORD': env('DATABASE_PASSWORD'),
+        'NAME': os.getenv('DATABASE_NAME'),
+        'USER': os.getenv('DATABASE_USER'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
     }
 }
 
-database_url = env("DATABASE_URL")
+database_url = os.getenv("DATABASE_URL")
 print(database_url)
 DATABASES["default"] = dj_database_url.parse(database_url)
 
